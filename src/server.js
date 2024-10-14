@@ -3,7 +3,10 @@ import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { env } from './utils/env.js';
-import { getAllContacts, getContactById } from './services/contacts.js';
+import router from './routers/contacts.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+
 
 dotenv.config();
 
@@ -22,52 +25,58 @@ export const startServer = () => {
       },
     }),
   );
-  app.get('/contacts', async (req, res) => {
-    const contacts = await getAllContacts();
+  // app.get('/contacts', async (req, res) => {
+  //   const contacts = await getAllContacts();
 
-    res.status(200).json({
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
-  });
+  //   res.status(200).json({
+  //     message: 'Successfully found contacts!',
+  //     data: contacts,
+  //   });
+  // });
 
-app.get('/contacts/:contactId', async (req, res) => {
-    const { contactId } = req.params;
+// app.get('/contacts/:contactId', async (req, res) => {
+//     const { contactId } = req.params;
 
-    try {
-      const contact = await getContactById(contactId);
+//     try {
+//       const contact = await getContactById(contactId);
 
-      if (contact === null) {
-        res.status(404).json({
-          message: 'Contact not found',
-        });
-        return;
-      }
-      res.json({
-        status: 200,
-        message: `Successfully found contact with id ${contactId}!`,
-        data: contact,
-      });
-    } catch (error) {
-      res.status(500).json({
-        message: 'Internal server error',
-      });
-      console.error(error.message);
-    }
-  });
+//       if (contact === null) {
+//         res.status(404).json({
+//           message: 'Contact not found',
+//         });
+//         return;
+//       }
+//       res.json({
+//         status: 200,
+//         message: `Successfully found contact with id ${contactId}!`,
+//         data: contact,
+//       });
+//     } catch (error) {
+//       res.status(500).json({
+//         message: 'Internal server error',
+//       });
+//       console.error(error.message);
+//     }
+//   });
 
-  app.use('*', (req, res, next) => {
-    res.status(404).json({
-      message: 'Not found',
-    });
-  });
+  // app.use('*', (req, res, next) => {
+  //   res.status(404).json({
+  //     message: 'Not found',
+  //   });
+  // });
 
-  app.use((err, req, res, next) => {
-    res.status(500).json({
-      message: 'Something went wrong',
-      error: err.message,
-    });
-  });
+  // app.use('*',(err, req, res, next) => {
+  //   res.status(500).json({
+  //     message: 'Something went wrong',
+  //     error: err.message,
+  //   });
+  // });
+
+    app.use(router);
+
+  app.use('*', notFoundHandler);
+
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
