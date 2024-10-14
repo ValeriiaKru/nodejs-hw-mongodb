@@ -23,11 +23,11 @@ export const startServer = () => {
     }),
   );
   app.get('/contacts', async (req, res) => {
-    const contacts = await getAllContacts();
+    const allContacts = await getAllContacts();
 
     res.status(200).json({
       message: 'Successfully found contacts!',
-      data: contacts,
+      data: allContacts,
     });
   });
 
