@@ -1,4 +1,4 @@
-const parseNumber = (number, defaultValue) => {
+const parseNumber = (value, defaultValue) => {
     if (typeof value !== 'string') return defaultValue;
     const parsedValue = parseInt(value);
     if (Number.isNaN(parsedValue) === true) return defaultValue;

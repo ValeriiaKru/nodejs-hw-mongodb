@@ -1,5 +1,5 @@
 import { Router } from 'express';
-
+import express from 'express';
 
 import {
   getAllContactsController,
@@ -14,7 +14,7 @@ import { isValidId } from '../middlewares/isValidId.js';
 import { createContactSchema, updateContactSchema } from '../validation/contacts.js';
 
 const router = Router();
-
+const jsonParser = express.json();
 
 router.get('/contacts', ctrlWrapper(getAllContactsController));
 
@@ -26,12 +26,14 @@ router.get(
 
 router.post(
   '/contacts',
+   jsonParser,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
 router.patch(
   '/contacts/:contactId',
+   jsonParser,
   isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(updateContactController),
