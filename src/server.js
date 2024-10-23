@@ -10,20 +10,20 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 dotenv.config();
 
-const PORT = Number(env('PORT', '3000'));
+const PORT = Number(env('PORT', '4000'));
 
 export function setupServer() {
   const app = express();
 
   app.use(cors());
 
-  app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
-    }),
-  );
+  // app.use(
+  //   pino({
+  //     transport: {
+  //       target: 'pino-pretty',
+  //     },
+  //   }),
+  // );
 
   app.use(router);
 
