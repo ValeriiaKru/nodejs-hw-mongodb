@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import express from 'express';
+import { authenticate } from '../middlewares/authenticate.js';
 
 import {
   getAllContactsController,
@@ -13,26 +14,30 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { createContactSchema, updateContactSchema } from '../validation/contacts.js';
 
+ 
 const router = Router();
 const jsonParser = express.json();
+router.use(authenticate);
 
-router.get('/contacts', ctrlWrapper(getAllContactsController));
+router.get('/', ctrlWrapper( getAllContactsController));
+
 
 router.get(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   ctrlWrapper(getContactByIdController),
 );
 
 router.post(
-  '/contacts',
-   jsonParser,
+  '/',
+  jsonParser,
+   authenticate,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
 router.patch(
-  '/contacts/:contactId',
+  '/:contactId',
    jsonParser,
   isValidId,
   validateBody(updateContactSchema),
@@ -40,7 +45,7 @@ router.patch(
 );
 
 router.delete(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   ctrlWrapper(deleteContactController));
 

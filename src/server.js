@@ -1,9 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import pino from 'pino-http';
-import { env } from './utils/env.js';
 
+import { env } from './utils/env.js';
+import cookieParser from 'cookie-parser';
 import router from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -15,17 +15,9 @@ const PORT = Number(env('PORT', '4000'));
 export function setupServer() {
   const app = express();
 
+app.use(router);
   app.use(cors());
-
-  // app.use(
-  //   pino({
-  //     transport: {
-  //       target: 'pino-pretty',
-  //     },
-  //   }),
-  // );
-
-  app.use(router);
+  app.use(cookieParser());
 
   app.use('*', notFoundHandler);
 
