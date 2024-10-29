@@ -15,20 +15,20 @@ import { isValidId } from '../middlewares/isValidId.js';
 import { createContactSchema, updateContactSchema } from '../validation/contacts.js';
 
  
-const router = Router();
+const contactsRouter = Router();
 const jsonParser = express.json();
-router.use(authenticate);
+contactsRouter.use(authenticate);
 
-router.get('/', ctrlWrapper( getAllContactsController));
+contactsRouter.get('/', ctrlWrapper( getAllContactsController));
 
 
-router.get(
+contactsRouter.get(
   '/:contactId',
   isValidId,
   ctrlWrapper(getContactByIdController),
 );
 
-router.post(
+contactsRouter.post(
   '/',
   jsonParser,
    authenticate,
@@ -36,7 +36,7 @@ router.post(
   ctrlWrapper(createContactController),
 );
 
-router.patch(
+contactsRouter.patch(
   '/:contactId',
    jsonParser,
   isValidId,
@@ -44,9 +44,9 @@ router.patch(
   ctrlWrapper(updateContactController),
 );
 
-router.delete(
+contactsRouter.delete(
   '/:contactId',
   isValidId,
   ctrlWrapper(deleteContactController));
 
-export default router;
+export default contactsRouter;
