@@ -15,9 +15,10 @@ const PORT = Number(env('PORT', '4000'));
 export function setupServer() {
   const app = express();
   app.use(cors());
+  app.use(cookieParser());
   app.use(router);
 
-  app.use(cookieParser());
+
 
   app.use('*', notFoundHandler);
 
