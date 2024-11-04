@@ -154,10 +154,10 @@ export const requestResetToken = async (email) => {
   const template = handlebars.compile(templateSource);
   const html = template({
     name: user.name,
-    link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
+    link: `${env('APP_DOMAIN')}auth/reset-password?token=${resetToken}`,
   });
 
-   try {
+  try {
     await sendEmail({
       from: env('SMTP_FROM'),
       to: email,
@@ -165,8 +165,6 @@ export const requestResetToken = async (email) => {
       html,
     });
   } catch (error) {
-    console.log(error);
-
     throw createHttpError(
       500,
       'Failed to send the email, please try again later.',
