@@ -13,7 +13,7 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { createContactSchema, updateContactSchema } from '../validation/contacts.js';
-
+import { upload } from '../middlewares/multer.js';
  
 const contactsRouter = Router();
 const jsonParser = express.json();
@@ -28,25 +28,27 @@ contactsRouter.get(
   ctrlWrapper(getContactByIdController),
 );
 
-contactsRouter.post(
-  '/',
-  jsonParser,
-   authenticate,
-  validateBody(createContactSchema),
-  ctrlWrapper(createContactController),
-);
-
-contactsRouter.patch(
-  '/:contactId',
-   jsonParser,
-  isValidId,
-  validateBody(updateContactSchema),
-  ctrlWrapper(updateContactController),
-);
 
 contactsRouter.delete(
   '/:contactId',
   isValidId,
   ctrlWrapper(deleteContactController));
 
+contactsRouter.post(
+  '/',
+  jsonParser,
+  upload.single('photo'),
+  validateBody(createContactSchema),
+  ctrlWrapper(createContactController),
+);
+
+
+contactsRouter.patch(
+  '/:contactId',
+  jsonParser,
+  isValidId,
+  upload.single('photo'),
+  validateBody(updateContactSchema),
+  ctrlWrapper(updateContactController),
+);
 export default contactsRouter;
