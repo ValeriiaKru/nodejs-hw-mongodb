@@ -116,15 +116,19 @@ export const resetPassword = async (token, pwd) => {
       password: hashedPwd,
     });
   } catch (error) {
+    console.error('Error in resetPassword:', error);
+
     if (
       error.name === 'JsonWebTokenError' ||
       error.name === 'TokenExpiredError'
     ) {
       throw createHttpError(401, 'Token is expired or invalid.');
     }
+    
     throw error;
   }
 };
+
 
 export const requestResetToken = async (email) => {
   const user = await UsersCollection.findOne({ email });
@@ -165,7 +169,6 @@ export const requestResetToken = async (email) => {
       html,
     });
   } catch (error) {
-     console.log(error);
     throw createHttpError(
       500,
       'Failed to send the email, please try again later.',
