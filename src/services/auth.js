@@ -12,19 +12,19 @@ import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-export const registerUser = async (payload) => {
+export async function registerUser(payload) {
   const user = await UsersCollection.findOne({ email: payload.email });
   if (user) throw createHttpError(409, 'Email in use');
-  
+
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
   return await UsersCollection.create({
     ...payload,
     password: encryptedPassword,
   });
-};
+}
 
-const createSession = () => {
+function createSession() {
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
 
@@ -32,9 +32,9 @@ const createSession = () => {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
+    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   };
-};
+}
 
 
 export const loginUser = async (payload) => {
@@ -98,33 +98,30 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 };
 
 
-export async function resetPassword(payload) {
-  let entries;
-
+export const resetPassword = async ({ token, password }) => {
   try {
-    entries = jwt.verify(payload.token, env('JWT_SECRET'));
-  } catch (err) {
-    if (err instanceof Error)
+    const decoded = jwt.verify(token, env('JWT_SECRET'));
+    const user = await UsersCollection.findOne({
+      _id: decoded.sub,
+      email: decoded.email,
+    });
+
+    if (!user) {
+      throw createHttpError(404, 'User not found!');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await UsersCollection.updateOne(
+      { _id: user._id },
+      { password: hashedPassword }
+    );
+
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
       throw createHttpError(401, 'Token is expired or invalid.');
-    throw err;
+    }
+    throw error;
   }
-
-  const user = await UsersCollection.findOne({
-    email: entries.email,
-    _id: entries.sub,
-  });
-
-  if (!user) {
-    throw createHttpError(404, 'User not found');
-  }
-
-  const encryptedPassword = await bcrypt.hash(payload.password, 10);
-
-  await UsersCollection.updateOne(
-    { _id: user._id },
-    { password: encryptedPassword },
-  );
-}
+};
 
 
 
@@ -162,7 +159,7 @@ export async function requestResetToken(email) {
 
   try {
     await sendEmail({
-      from: env(SMTP.SMTP_FROM),
+      from: env('SMTP_FROM'),
       to: email,
       subject: 'Reset your password',
       html,
