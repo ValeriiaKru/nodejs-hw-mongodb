@@ -149,49 +149,33 @@ export async function resetPassword(payload) {
 
 export async function requestResetToken(email) {
   const user = await UsersCollection.findOne({ email });
-
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
-
   const resetToken = jwt.sign(
     {
       sub: user._id,
       email,
     },
     env('JWT_SECRET'),
-    { expiresIn: '60m' },
+    { expiresIn: '60m' }
   );
-
-  const resetPasswordTemplatePath = path.join(
-    TEMPLATES_DIR,
-    'reset-password-email.html',
-  );
-
-  const templateSource = (
-    await fs.readFile(resetPasswordTemplatePath)
-  ).toString();
-
+  const resetPasswordTemplatePath = path.join(TEMPLATES_DIR, 'reset-password-email.html');
+  const templateSource = await fs.readFile(resetPasswordTemplatePath, 'utf-8');
   const template = handlebars.compile(templateSource);
-
   const html = template({
     name: user.name,
     link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
   });
-
   try {
     await sendEmail({
-      from: env(SMTP.SMTP_FROM),
+      from: env('SMTP_FROM'),
       to: email,
       subject: 'Reset your password',
       html,
     });
   } catch (error) {
     console.log(error);
-
-    throw createHttpError(
-      500,
-      'Failed to send the email, please try again later.',
-    );
+    throw createHttpError(500, 'Failed to send the email, please try again later.');
   }
 }
