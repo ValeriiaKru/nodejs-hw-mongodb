@@ -130,7 +130,7 @@ const user = await UsersCollection.findOne({ email });
     env('JWT_SECRET'),
     { expiresIn: '5m' }
   );
-  const resetPasswordTemplatePath = path.join(TEMPLATES_DIR, 'reset-password.html');
+  const resetPasswordTemplatePath = path.join(TEMPLATES_DIR, 'reset-password-email.html');
   const templateSource = (await fs.readFile(resetPasswordTemplatePath)).toString();
   const template = handlebars.compile(templateSource);
   const html = template({
