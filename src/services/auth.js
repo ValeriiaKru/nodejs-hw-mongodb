@@ -98,36 +98,33 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 };
 
 
-export const resetPassword = async (token, pwd) => {
+export async function resetPassword(payload) {
+  let entries;
+
   try {
-    const decoded = jwt.verify(token, env('JWT_SECRET'));
-
-    const user = await UsersCollection.findOne({
-      _id: decoded.sub,
-      email: decoded.email,
-    });
-
-    if (!user) {
-      throw createHttpError(404, 'User not found!');
-    }
-
-    const hashedPwd = await bcrypt.hash(pwd, 10);
-    await UsersCollection.findByIdAndUpdate(user._id, {
-      password: hashedPwd,
-    });
-  } catch (error) {
-    console.error('Error in resetPassword:', error);
-
-    if (
-      error.name === 'JsonWebTokenError' ||
-      error.name === 'TokenExpiredError'
-    ) {
+    entries = jwt.verify(payload.token, env('JWT_SECRET'));
+  } catch (err) {
+    if (err instanceof Error)
       throw createHttpError(401, 'Token is expired or invalid.');
-    }
-    
-    throw error;
+    throw err;
   }
-};
+
+  const user = await UsersCollection.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+  await UsersCollection.updateOne(
+    { _id: user._id },
+    { password: encryptedPassword },
+  );
+}
 
 
 export const requestResetToken = async (email) => {
@@ -135,6 +132,7 @@ export const requestResetToken = async (email) => {
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
+
   const resetToken = jwt.sign(
     {
       sub: user._id,
@@ -145,6 +143,8 @@ export const requestResetToken = async (email) => {
       expiresIn: '15m',
     },
   );
+
+  console.log('Generated reset token:', resetToken);
 
   const resetPasswordTemplatePath = path.join(
     TEMPLATES_DIR,
@@ -158,7 +158,7 @@ export const requestResetToken = async (email) => {
   const template = handlebars.compile(templateSource);
   const html = template({
     name: user.name,
-    link: `${env('APP_DOMAIN')}auth/reset-password?token=${resetToken}`,
+    link: `${env('APP_DOMAIN')}/auth/reset-password?token=${resetToken}`,
   });
 
   try {
@@ -169,6 +169,8 @@ export const requestResetToken = async (email) => {
       html,
     });
   } catch (error) {
+    console.error('Error in requestResetToken:', error);
+
     throw createHttpError(
       500,
       'Failed to send the email, please try again later.',
