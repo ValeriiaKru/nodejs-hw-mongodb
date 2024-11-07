@@ -169,7 +169,7 @@ export async function requestResetToken(email) {
 
     throw createHttpError(
       500,
-      'Failed to send the email, please try again later.',
+      error.message,
     );
   }
 }
