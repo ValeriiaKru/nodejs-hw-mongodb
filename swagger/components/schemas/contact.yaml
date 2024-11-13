@@ -1,6 +1,6 @@
 type: object
 required:
- - _id
+  - _id
   - name
   - email
   - phoneNumber
@@ -10,29 +10,32 @@ properties:
   _id:
     description: "Contact's id"
     type: string
-    example: 65e4decdd286b30065d54af9
+    example: "65e4decdd286b30065d54af9"
   name:
     description: "Contact's name"
     type: string
-    example: 'John Doe'
+    example: "John Doe"
   email:
     description: "Contact's email"
     type: string
-    example: jhondoe@example.com
+    example: "jhondoe@example.com"
   phoneNumber:
     description: "Contact's phone number"
     type: string
-    enum: 0988908789
+    example: "0988908789"
   contactType:
-    description: 'Contact's type'
+    description: "Contact's type"
     type: string
-    enum: ['work','personal','home']
-    default:'personal'
+    enum:
+      - work
+      - personal
+      - home
+    default: personal
   userId:
     description: "Contact's user id"
     type: string
-    example: 65e4decdd286b30065d54af9
+    example: "65e4decdd286b30065d54af9"
   photo:
     description: "Link to contact's photo"
     type: string
-    example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
+    example: "https://res.cloudinary.com/uqwgdu/image/upload/image.jpg"

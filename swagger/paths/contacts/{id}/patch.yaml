@@ -2,7 +2,7 @@ tags:
   - Contacts
 summary: Update contact by id
 operationId: updateContact
-description:  'Update contact by id'
+description: 'Update contact by id'
 security:
   - bearerAuth: []
 requestBody:
@@ -49,15 +49,16 @@ responses:
             - message
             - data
           properties:
-            status:number
+            status:
+              type: number
               example: 200
             message:
               type: string
-              example: Successfully created a contsct!
+              example: Successfully updated a contact!
             data:
               type: object
-              $ref: '../../components/schemas/contact.yaml'
+              $ref: '../../../components/schemas/contact.yaml'
   401:
-    $ref: '../../components/responses/401.yaml'
+    $ref: '../../../components/responses/401.yaml'
   404:
-    $ref: ../../components/responses/404.yaml
+    $ref: '../../../components/responses/404.yaml'
