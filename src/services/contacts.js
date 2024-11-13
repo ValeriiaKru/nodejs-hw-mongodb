@@ -55,14 +55,11 @@ export const updateContact = async (
     payload,
     {
       new: true,
-      includeResultMetadata: true,
       ...options,
     },
   );
 
-  const contact = rawResult.value;
-
-  if (!rawResult || !contact) return null;
+  if (!contact) return null;
 
   return contact;
 };
