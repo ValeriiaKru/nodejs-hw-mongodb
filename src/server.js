@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-
+import {swaggerDocs} from './middlewares/swaggerDocs.js'
 import { env } from './utils/env.js';
 import cookieParser from 'cookie-parser';
 import router from './routers/index.js';
