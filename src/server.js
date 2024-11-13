@@ -15,6 +15,7 @@ const PORT = Number(env('PORT', '3000'));
 export function setupServer() {
   const app = express();
   app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
   app.use(cors());
   app.use(cookieParser());
   app.use(router);
