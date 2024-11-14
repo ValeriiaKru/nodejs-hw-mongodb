@@ -339,13 +339,6 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "name",
-                  "phoneNumber",
-                  "email",
-                  "contactType",
-                  "photo"
-                ],
                 "properties": {
                   "name": {
                     "description": "Contact's name",

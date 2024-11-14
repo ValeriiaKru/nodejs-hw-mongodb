@@ -27,6 +27,11 @@ requestBody:
             description: "Contact's phone number"
             type: string
             example: 0988908776
+          isFavourite:
+            description: 'Contact favourite or not'
+            type: boolean
+            default: false
+            example: true
           contactType:
             description: "Contact's type"
             type: string

@@ -10,12 +10,6 @@ requestBody:
     multipart/form-data:
       schema:
         type: object
-        required:
-          - name
-          - phoneNumber
-          - email
-          - contactType
-          - photo
         properties:
           name:
             description: "Contact's name"
@@ -25,6 +19,11 @@ requestBody:
             description: "Contact's phone number"
             type: string
             example: '0988908789'
+          isFavourite:
+            description: 'Contact favourite or not'
+            type: boolean
+            default: false
+            example: true
           email:
             description: "Contact's email"
             type: string
@@ -61,4 +60,4 @@ responses:
   401:
     $ref: '../../../components/responses/401.yaml'
   404:
-    $ref: '../../../components/responses/404.yaml'
+    $ref: '../../../components/responses/404.yaml' 

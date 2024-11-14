@@ -7,6 +7,7 @@ import {
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
@@ -22,6 +23,7 @@ export const getAllContactsController = async (req, res) => {
     perPage,
     sortBy,
     sortOrder,
+    filter,
     userId,
   });
 
