@@ -6,21 +6,12 @@ export const getAllContacts = async ({
   perPage,
   sortBy,
   sortOrder,
-   filter,
   userId,
 }) => {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
   const contactsQuery = ContactsCollection.find();
   
-  if (filter.type) {
-    contactsQuery.where('contactType').equals(filter.type);
-  }
-
-  if (filter.isFavourite) {
-    contactsQuery.where('isFavourite').equals(filter.isFavourite);
-  }
-
   contactsQuery.where('userId').equals(userId);
 
   const [totalItems, contacts] = await Promise.all([
