@@ -6,8 +6,9 @@ import {
   updateContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
-import { parseSortParams } from '../utils/parseSortParams.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { env } from '../utils/env.js';
@@ -15,6 +16,7 @@ import { env } from '../utils/env.js';
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
   const userId = req.user._id;
 
   const data = await getAllContacts({
@@ -22,6 +24,7 @@ export const getAllContactsController = async (req, res) => {
     perPage,
     sortBy,
     sortOrder,
+    filter,
     userId,
   });
 
