@@ -206,6 +206,12 @@
                     "type": "string",
                     "example": 988908776
                   },
+                  "isFavourite": {
+                    "description": "Contact favourite or not",
+                    "type": "boolean",
+                    "default": false,
+                    "example": true
+                  },
                   "contactType": {
                     "description": "Contact's type",
                     "type": "string",
@@ -349,6 +355,12 @@
                     "description": "Contact's phone number",
                     "type": "string",
                     "example": "0988908789"
+                  },
+                  "isFavourite": {
+                    "description": "Contact favourite or not",
+                    "type": "boolean",
+                    "default": false,
+                    "example": true
                   },
                   "email": {
                     "description": "Contact's email",
@@ -503,6 +515,12 @@
             "description": "Contact's phone number",
             "type": "string",
             "example": "0988908789"
+          },
+          "isFavourite": {
+            "description": "Contact favourite or not",
+            "type": "boolean",
+            "default": false,
+            "example": true
           },
           "contactType": {
             "description": "Contact's type",
