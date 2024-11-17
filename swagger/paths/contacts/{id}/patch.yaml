@@ -5,6 +5,13 @@ operationId: updateContact
 description: 'Update contact by id'
 security:
   - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598495'
 requestBody:
   content:
     multipart/form-data:
@@ -60,4 +67,4 @@ responses:
   401:
     $ref: '../../../components/responses/401.yaml'
   404:
-    $ref: '../../../components/responses/404.yaml' 
+    $ref: '../../../components/responses/404.yaml'
