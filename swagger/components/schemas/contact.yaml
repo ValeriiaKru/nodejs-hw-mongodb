@@ -2,7 +2,6 @@ type: object
 required:
   - _id
   - name
-  - email
   - phoneNumber
   - contactType
   - userId

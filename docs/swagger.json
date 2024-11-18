@@ -501,7 +501,6 @@
         "required": [
           "_id",
           "name",
-          "email",
           "phoneNumber",
           "contactType",
           "userId"
